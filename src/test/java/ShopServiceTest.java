@@ -33,4 +33,17 @@ class ShopServiceTest {
         //THEN
         assertNull( actual );
     }
+    
+    @Test
+    void getOrdersByOrderStatusTest() {
+        ShopService shopService = new ShopService();
+        shopService.addOrder( List.of( "1" ), OrderStatus.PROCESSING );
+        shopService.addOrder( List.of( "1" ), OrderStatus.PROCESSING );
+        
+        List<Order> expected = List.of( new Order( "-1", List.of( new Product( "1", "Apfel" ) ), OrderStatus.PROCESSING ) );
+        
+        List<Order> actual = shopService.getOrdersByOrderStatus( OrderStatus.PROCESSING );
+        
+        assertTrue( actual.stream().allMatch( a -> expected.stream().allMatch( e -> e.orderStatus() == a.orderStatus() ) ) );
+    }
 }
