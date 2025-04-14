@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ShopServiceTest {
     
     @Test
-    void addOrderTest() {
+    void addOrderTest() throws Exception {
         //GIVEN
         ShopService shopService = new ShopService();
         List<String> productsIds = List.of( "1" );
@@ -22,20 +22,17 @@ class ShopServiceTest {
     }
     
     @Test
-    void addOrderTest_whenInvalidProductId_expectNull() {
+    void addOrderTest_whenInvalidProductId_expectProductNotFoundException() {
         //GIVEN
         ShopService shopService = new ShopService();
         List<String> productsIds = List.of( "1", "2" );
         
-        //WHEN
-        Order actual = shopService.addOrder( productsIds, OrderStatus.PROCESSING );
-        
         //THEN
-        assertNull( actual );
+        assertThrows( ProductNotFoundException.class, () -> shopService.addOrder( productsIds, OrderStatus.PROCESSING ) );
     }
     
     @Test
-    void getOrdersByOrderStatusTest() {
+    void getOrdersByOrderStatusTest() throws Exception {
         ShopService shopService = new ShopService();
         shopService.addOrder( List.of( "1" ), OrderStatus.PROCESSING );
         shopService.addOrder( List.of( "1" ), OrderStatus.PROCESSING );
