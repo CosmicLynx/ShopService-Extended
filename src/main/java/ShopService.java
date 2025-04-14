@@ -7,7 +7,7 @@ public class ShopService {
     private final ProductRepo productRepo = new ProductRepo();
     private final OrderRepo orderRepo = new OrderMapRepo();
     
-    public Order addOrder( List<String> productIds, OrderStatus orderStatus ) throws Exception {
+    public Order addOrder( List<String> productIds ) throws Exception {
         List<Product> products = new ArrayList<>();
         for ( String productId : productIds ) {
             Optional<Product> productToOrder = productRepo.getProductById( productId );
@@ -17,7 +17,7 @@ public class ShopService {
             products.add( productToOrder.get() );
         }
         
-        Order newOrder = new Order( UUID.randomUUID().toString(), products, orderStatus );
+        Order newOrder = new Order( UUID.randomUUID().toString(), products, OrderStatus.PROCESSING );
         
         return orderRepo.addOrder( newOrder );
     }
@@ -25,4 +25,9 @@ public class ShopService {
     public List<Order> getOrdersByOrderStatus( OrderStatus orderStatus ) {
         return orderRepo.getOrders().stream().filter( o -> o.orderStatus().equals( orderStatus ) ).toList();
     }
+    
+    public Order updateOrder( String orderId, OrderStatus orderStatus ) {
+        return orderRepo.getOrderById( orderId ).withOrderStatus( orderStatus );
+    }
+    
 }
